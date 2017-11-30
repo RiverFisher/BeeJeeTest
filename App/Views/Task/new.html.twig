@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Add task{% endblock %}
+
+{% block top_navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ host }}"><i class="fa fa-home"></i>&nbsp;Home</a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ host ~ '/task' }}"><i class="fa fa-list"></i>&nbsp;Tasks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+    </li>
+{% endblock top_navigation %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="margin: 30px 0;">Tasks list</h1>
+
+        <form name="edit_form" id="edit_form" method="GET" action="new">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title" value=""
+                       aria-describedby="titleHelp" placeholder="Enter title"/>
+                <small id="titleHelp" class="form-text text-muted">Enter task title here</small>
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description"
+                          aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
+                <small id="titleHelp" class="form-text text-muted">Enter task title here</small>
+            </div>
+            <br><button type="submit" class="btn btn-dark"><i class="fa fa-plus-square-o"></i>&nbsp;Add</button>
+        </form>
+    </div>
+{% endblock body %}
