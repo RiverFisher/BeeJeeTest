@@ -115,6 +115,9 @@ class UserController extends \Core\Controller
         }
 
         try {
+            $database = new Connection();
+            $db = $database->openConnection();
+            
             View::renderTemplate('User/new.html.twig', [
                 'roles' => $db->query("SELECT * FROM role")
             ]);
