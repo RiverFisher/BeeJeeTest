@@ -17,6 +17,9 @@ class View
      */
     public static function render($view, $args = [])
     {
+        $args['app_user'] = $_SESSION['app_user'];
+        $args['authenticated'] = $_SESSION['authenticated'];
+
         extract($args, EXTR_SKIP);
 
         $file = dirname(__DIR__) . "/App/Views/$view";  // relative to Core directory
@@ -38,6 +41,9 @@ class View
      */
     public static function renderTemplate($template, $args = [])
     {
+        $args['app_user'] = $_SESSION['app_user'];
+        $args['authenticated'] = $_SESSION['authenticated'];
+
         static $twig = null;
 
         if ($twig === null) {

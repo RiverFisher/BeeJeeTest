@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Add role{% endblock %}
+
+{% block top_navigation %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ '/' }}"><i class="fa fa-home"></i>&nbsp;Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ '/task' }}"><i class="fa fa-list"></i>&nbsp;Tasks</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ '/user' }}"><i class="fa fa-users"></i>&nbsp;Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+    </li>
+{% endblock top_navigation %}
+
+{% block body %}
+    <div class="container">
+        <h1 style="margin: 30px 0;">Add role</h1>
+
+        <form name="edit_form" id="edit_form" method="POST" action="new">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value=""
+                       aria-describedby="nameHelp" placeholder="Enter name"/>
+                <small id="nameHelp" class="form-text text-muted">Enter name here</small>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-dark">
+                <i class="fa fa-plus-square-o"></i>&nbsp;Add
+            </button>
+            <br><br>
+        </form>
+    </div>
+{% endblock body %}

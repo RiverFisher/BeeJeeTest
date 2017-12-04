@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Add task{% endblock %}
+{% block title %}Edit task{% endblock %}
 
 {% block top_navigation %}
     <li class="nav-item">
@@ -10,13 +10,16 @@
         <a class="nav-link" href="{{ '/task' }}"><i class="fa fa-list"></i>&nbsp;Tasks</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" href="{{ '/user' }}"><i class="fa fa-users"></i>&nbsp;Users</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
     </li>
 {% endblock top_navigation %}
 
 {% block body %}
     <div class="container">
-        <h1 style="margin: 30px 0;">Edit of task {{ task.id }}</h1>
+        <h1 style="margin: 30px 0;">Edit task {{ task.id }}</h1>
 
         <form name="edit_form" id="edit_form" method="POST" action="{{ task.id }}">
             <div class="form-group">
@@ -32,7 +35,85 @@
                           placeholder="Enter description">{{ task.description }}</textarea>
                 <small id="titleHelp" class="form-text text-muted">Enter task title here</small>
             </div>
-            <br><button type="submit" class="btn btn-dark"><i class="fa fa-angle-double-up"></i>&nbsp;Save</button>
+            <br>
+            <button type="submit" class="btn btn-dark"><i class="fa fa-angle-double-up"></i>&nbsp;Save</button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#previewModal">
+                <i class="fa fa-eye"></i>&nbsp;Preview
+            </button>
         </form>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Task preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1 style="margin: 30px 0;">Tasks list</h1>
+
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td id="previewTaskId" scope="row"></td>
+                            <td id="previewTaskTitle"></td>
+                            <td id="previewTaskDescription"></td>
+                            <td id="previewTaskStatus"></td>
+                            <td>
+                                {% if is_granted %}
+                                    <a class="btn btn-outline-dark" href="" role="button">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                {% endif %}
+                                <a class="btn btn-outline-success" href="" role="button">
+                                    <i class="fa fa-hand-lizard-o"></i>
+                                </a>
+                                {% if is_granted %}
+                                    <a class="btn btn-outline-danger" href="" role="button">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock body %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('td#previewTaskId').text({{ task.id }});
+            $('td#previewTaskTitle').text($('form#edit_form input#title').val());
+            $('td#previewTaskDescription').text($('form#edit_form textarea#description').val());
+            $('td#previewTaskStatus').text('New');
+            $('form#edit_form input#title').on('change paste keyup', function() {
+                $('td#previewTaskTitle').text($(this).val());
+            });
+            $('form#edit_form textarea#description').on('change paste keyup', function() {
+                $('td#previewTaskDescription').text($(this).val());
+            });
+        });
+    </script>
+{% endblock %}

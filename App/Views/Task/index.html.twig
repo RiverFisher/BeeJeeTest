@@ -10,6 +10,9 @@
         <a class="nav-link" href="{{ '/task' }}"><i class="fa fa-list"></i>&nbsp;Tasks</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" href="{{ '/user' }}"><i class="fa fa-users"></i>&nbsp;Users</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
     </li>
 {% endblock top_navigation %}
@@ -17,6 +20,11 @@
 {% block body %}
     <div class="container">
         <h1 style="margin: 30px 0;">Tasks list</h1>
+
+        {% set is_granted = false %}
+        {% for role in app_user.roles if role == 'ROLE_ADMIN' %}
+            {% set is_granted = true %}
+        {% endfor %}
 
         <a class="btn btn-outline-dark" href="{{ '/task/new' }}" role="button">
             <i class="fa fa-plus-square-o"></i>&nbsp;Add task
@@ -68,15 +76,19 @@
                     <td>{{ task.description }}</td>
                     <td>{{ task.status }}</td>
                     <td>
+                        {% if is_granted %}
                         <a class="btn btn-outline-dark" href="{{ '/task/edit/' ~ task.id }}" role="button">
                             <i class="fa fa-pencil"></i>
                         </a>
+                        {% endif %}
                         <a class="btn btn-outline-success" href="{{ '/task/complete/' ~ task.id }}" role="button">
                             <i class="fa fa-hand-lizard-o"></i>
                         </a>
+                        {% if is_granted %}
                         <a class="btn btn-outline-danger" href="{{ '/task/delete/' ~ task.id }}" role="button">
                             <i class="fa fa-trash"></i>
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

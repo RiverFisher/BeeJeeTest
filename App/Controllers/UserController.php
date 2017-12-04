@@ -2,15 +2,15 @@
 
 namespace App\Controllers;
 
-use App\Models\Task;
+use App\Models\User;
 use Core\Connection;
 use \Core\View;
 use PDOException;
 
 /**
- * Task controller
+ * User controller
  */
-class TaskController extends \Core\Controller
+class UserController extends \Core\Controller
 {
     /**
      * Show tasks
@@ -26,33 +26,33 @@ class TaskController extends \Core\Controller
 
                 $limitPerPage = 8;
 
-                $sql = "SELECT COUNT(*) FROM task";
+                $sql = "SELECT COUNT(*) FROM platform_user";
                 foreach ($db->query($sql) as $row) {}
                 $countOfPages = (int) ($row['count'] / $limitPerPage) + ((int) $row['count'] % $limitPerPage > 0 ? 1 : 0);
 
-                $sql = "SELECT * FROM task";
-                $sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : 'id';
-                $sortingOrder = isset($_GET['sortingOrder']) ? $_GET['sortingOrder'] : 'ASC';
-                $sql .= ' ORDER BY ' . $sortBy . ' ' . $sortingOrder;
+                $sql = "SELECT * FROM platform_user";
+//                $sortBy = isset($_GET['sortBy']) ? $_GET['sortBy'] : 'id';
+//                $sortingOrder = isset($_GET['sortingOrder']) ? $_GET['sortingOrder'] : 'ASC';
+//                $sql .= ' ORDER BY ' . $sortBy . ' ' . $sortingOrder;
                 $sql .= ' LIMIT ' . $limitPerPage;
                 $sql .= isset($_GET['page']) ? " OFFSET " . (((int) $_GET['page'] - 1) * $limitPerPage) : " OFFSET 0";
 
                 $pagination = [
                     'currentPage' => isset($_GET['page']) ? (int) $_GET['page'] : 1,
                     'countOfPages' => $countOfPages,
-                    'sortBy' => $sortBy,
-                    'sortingOrder' => $sortingOrder,
+//                    'sortBy' => $sortBy,
+//                    'sortingOrder' => $sortingOrder,
                     'result' => $db->query($sql)
                 ];
 
-                View::renderTemplate('Task/index.html.twig', [
+                View::renderTemplate('User/index.html.twig', [
                     'pagination' => $pagination
                 ]);
             } catch (PDOException $e) {
                 echo "There is some problem in connection: " . $e->getMessage();
             }
         } else {
-            $this->redirect('/task?page=1&sortBy=id&sortingOrder=ASC');
+            $this->redirect('/user?page=1');
         }
     }
 
@@ -60,47 +60,63 @@ class TaskController extends \Core\Controller
      * Create new instance of task
      */
     public function newAction() {
-        if (isset($_GET['title']) && isset($_GET['description'])) {
+        if (isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
             try {
                 $currentDate = new \DateTime('NOW');
 
                 $database = new Connection();
                 $db = $database->openConnection();
 
-                $sql = "SELECT MAX(id) FROM task";
+                $sql = "SELECT MAX(id) FROM platform_user";
                 foreach ($db->query($sql) as $row) {}
 
                 $stm = $db->prepare(
-                    "INSERT INTO task (
+                    "INSERT INTO platform_user (
                         id,
-                        title,
-                        description,
-                        status,
+                        username,
+                        email,
+                        password,
+                        roles,
+                        first_name,
+                        last_name,
+                        brief_info,
                         date_of_creation,
                         date_of_change
-                    ) VALUES (:id, :title, :description, :status, :date_of_creation, :date_of_change)");
+                    ) VALUES (
+                        :id,
+                        :username,
+                        :email,
+                        :password,
+                        :roles,
+                        :first_name,
+                        :last_name,
+                        :brief_info,
+                        :date_of_creation,
+                        :date_of_change
+                    )"
+                );
                 $stm->execute([
                     ':id' => (int) $row['max'] + 1,
-                    ':title' => $_GET['title'],
-                    ':description' => $_GET['description'],
-                    ':status' => Task::NEW_TASK,
+                    ':username' => $_POST['username'],
+                    ':email' => $_POST['email'],
+                    ':password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+                    ':roles' => implode(';', $_POST['roles']),
+                    ':first_name' => $_POST['firstName'],
+                    ':last_name' => $_POST['lastName'],
+                    ':brief_info' => $_POST['briefInfo'],
                     ':date_of_creation' => $currentDate->format('Y-m-d H:i:s'),
                     ':date_of_change' => $currentDate->format('Y-m-d H:i:s')]
                 );
 
-                $this->redirect('/task');
+                $this->redirect('/user');
             } catch (PDOException $e) {
                 echo "There is some problem in connection: " . $e->getMessage();
             }
         }
+
         try {
-            $database = new Connection();
-            $db = $database->openConnection();
-
-            foreach ($db->query("SELECT MAX(id) FROM task") as $row) {}
-
-            View::renderTemplate('Task/new.html.twig', [
-                'lastTaskId' => $row['max']
+            View::renderTemplate('User/new.html.twig', [
+                'roles' => $db->query("SELECT * FROM role")
             ]);
         } catch (PDOException $e) {
             echo "There is some problem in connection: " . $e->getMessage();
@@ -116,12 +132,18 @@ class TaskController extends \Core\Controller
                 $database = new Connection();
                 $db = $database->openConnection();
 
-                $sql = "UPDATE task SET title = '" . $_POST['title'] .
-                    "', description = '" . $_POST['description'] .
+                $sql = "UPDATE platform_user SET
+                    username = '" . $_POST['username'] .
+                    "', email = '" . $_POST['email'] .
+                    "', password = '" . password_hash($_POST['password'], PASSWORD_BCRYPT) .
+                    "', roles = '" . implode(';', $_POST['roles']) .
+                    "', first_name = '" . $_POST['firstName'] .
+                    "', last_name = '" . $_POST['lastName'] .
+                    "', brief_info = '" . $_POST['briefInfo'] .
                     "', date_of_change = '" . (new \DateTime('NOW'))->format('Y-m-d H:i:s') .
                     "' WHERE id = " . $this->route_params['id'];
                 $db->exec($sql);
-                $this->redirect('/task');
+                $this->redirect('/user');
             } catch (PDOException $e) {
                 echo "There is some problem in connection: " . $e->getMessage();
             }
@@ -130,11 +152,14 @@ class TaskController extends \Core\Controller
                 $database = new Connection();
                 $db = $database->openConnection();
 
-                $sql = "SELECT * FROM task WHERE id = " . $this->route_params['id'];
+                $sql = "SELECT * FROM platform_user WHERE id = " . $this->route_params['id'];
                 foreach ($db->query($sql) as $row) {}
 
-                View::renderTemplate('Task/edit.html.twig', [
-                    'task' => $row
+                View::renderTemplate('User/edit.html.twig', [
+                    'user' => $row,
+                    'roles' => $_SESSION['app_user']->hasRole('ROLE_ADMIN') ?
+                        $db->query("SELECT * FROM role") :
+                        $db->query("SELECT * FROM role WHERE name != 'ROLE_ADMIN'")
                 ]);
             } catch (PDOException $e) {
                 echo "There is some problem in connection: " . $e->getMessage();
@@ -150,27 +175,9 @@ class TaskController extends \Core\Controller
             $database = new Connection();
             $db = $database->openConnection();
 
-            $sql = "DELETE FROM task WHERE id = " . $this->route_params['id'];
+            $sql = "DELETE FROM platform_user WHERE id = " . $this->route_params['id'];
             $db->exec($sql);
-            $this->redirect('/task');
-        } catch (PDOException $e) {
-            echo "There is some problem in connection: " . $e->getMessage();
-        }
-    }
-
-    /**
-     * Complete task with passed identifier
-     */
-    public function completeAction() {
-        try {
-            $database = new Connection();
-            $db = $database->openConnection();
-
-            $sql = "UPDATE task SET status = 'Completed', date_of_change = '" .
-                (new \DateTime('NOW'))->format('Y-m-d H:i:s') .
-                "' WHERE id = " . $this->route_params['id'];
-            $db->exec($sql);
-            $this->redirect('/task');
+            $this->redirect('/user');
         } catch (PDOException $e) {
             echo "There is some problem in connection: " . $e->getMessage();
         }

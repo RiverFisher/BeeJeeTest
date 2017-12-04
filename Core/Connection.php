@@ -7,6 +7,8 @@ use PDOException;
 
 class Connection
 {
+    const SHOW_ERRORS = true;
+
     private $server = "pgsql:host=localhost;dbname=bee_jee_db";
 
     private $user = "bee_jee_db_user";
