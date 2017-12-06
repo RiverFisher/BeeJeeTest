@@ -116,6 +116,8 @@
     <script>
         $(document).ready(function() {
             $('td#previewTaskId').text({{ lastTaskId + 1 }});
+            $('td#previewTaskUsername').text($('form#edit_form input#username').val());
+            $('td#previewTaskEmail').text($('form#edit_form input#email').val());
             $('form#edit_form input#title').on('change paste keyup', function() {
                 $('td#previewTaskTitle').text($(this).val());
             });
