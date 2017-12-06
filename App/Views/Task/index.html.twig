@@ -92,9 +92,11 @@
                             <i class="fa fa-pencil"></i>
                         </a>
                         {% endif %}
+                        {% if task.status != 'Completed' %}
                         <a class="btn btn-outline-success" href="{{ '/task/complete/' ~ task.id }}" role="button">
                             <i class="fa fa-hand-lizard-o"></i>
                         </a>
+                        {% endif %}
                         {% if is_granted or (app_user.id == task.author_id and app_user.id is not null) %}
                         <a class="btn btn-outline-danger" href="{{ '/task/delete/' ~ task.id }}" role="button">
                             <i class="fa fa-trash"></i>
