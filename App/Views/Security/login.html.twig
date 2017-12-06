@@ -93,11 +93,27 @@
                 font-size: 14px;
                 width: 198px;
             }
+            button {
+                border: none;
+            }
+            .btn {
+                width: 236px !important;
+                display: inline-block;
+                font-weight: 400;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: middle;
+                padding: .375rem 0;
+                border-radius: 4px;
+                color: #ffffff;
+                text-decoration: none;
+                background-color: #343a40;
+            }
         </style>
     {% endblock %}
 </head>
 <body>
-    {% set host = 'http://localhost' %}
+    {% set host = 'http://156.67.219.240' %}
 
     <div class="container">
         <div class="owl">
@@ -119,7 +135,10 @@
                     <input id="password" name="password" placeholder="Password" type="password">
                 </div>
                 <div class="control">
-                    <input type="submit">
+                    <button id="submit" class="btn" type="submit">Log In</button>
+                </div>
+                <div class="control">
+                    <a id="register" class="btn" href="{{ host ~ '/register' }}">Register</a>
                 </div>
             </form>
         </div>
