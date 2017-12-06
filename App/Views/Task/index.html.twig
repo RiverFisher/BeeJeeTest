@@ -78,7 +78,14 @@
                     <td>{{ task.description }}</td>
                     <td>{{ task.author_username }}</td>
                     <td>{{ task.author_email }}</td>
-                    <td>{{ task.status }}</td>
+                    <td>
+                        {% if task.status == 'New' %}
+                        <i class="fa fa-bookmark-o"></i>&nbsp;
+                        {% elseif task.status == 'Completed' %}
+                        <i class="fa fa-check"></i>&nbsp;
+                        {% endif %}
+                        {{ task.status }}
+                    </td>
                     <td>
                         {% if is_granted or (app_user.id == task.author_id and app_user.id is not null) %}
                         <a class="btn btn-outline-dark" href="{{ '/task/edit/' ~ task.id }}" role="button">
