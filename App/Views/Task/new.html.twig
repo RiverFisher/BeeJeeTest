@@ -21,7 +21,7 @@
     <div class="container">
         <h1 style="margin: 30px 0;">Add task</h1>
 
-        <form name="edit_form" id="edit_form" method="GET" action="new">
+        <form name="edit_form" id="edit_form" method="post" action="new">
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control" id="title" name="title" value=""
@@ -33,6 +33,18 @@
                 <textarea class="form-control" id="description" name="description"
                           aria-describedby="descriptionHelp" placeholder="Enter description"></textarea>
                 <small id="titleHelp" class="form-text text-muted">Enter task title here</small>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ app_user.username }}"
+                       aria-describedby="usernameHelp" placeholder="Enter task's author username"/>
+                <small id="usernameHelp" class="form-text text-muted">Enter your username here</small>
+            </div>
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="text" class="form-control" id="email" name="email" value="{{ app_user.email }}"
+                       aria-describedby="emailHelp" placeholder="Enter task's author E-Mail"/>
+                <small id="emailHelp" class="form-text text-muted">Enter your E-Mail here</small>
             </div>
             <br>
             <button type="submit" class="btn btn-dark"><i class="fa fa-plus-square-o"></i>&nbsp;Add</button>
@@ -62,6 +74,8 @@
                             <th scope="col">ID</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">E-Mail</th>
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -71,6 +85,8 @@
                                 <td id="previewTaskId" scope="row"></td>
                                 <td id="previewTaskTitle"></td>
                                 <td id="previewTaskDescription"></td>
+                                <td id="previewTaskUsername"></td>
+                                <td id="previewTaskEmail"></td>
                                 <td id="previewTaskStatus"></td>
                                 <td>
                                     <a class="btn btn-outline-dark" href="" role="button">
@@ -105,6 +121,12 @@
             });
             $('form#edit_form textarea#description').on('change paste keyup', function() {
                 $('td#previewTaskDescription').text($(this).val());
+            });
+            $('form#edit_form input#username').on('change paste keyup', function() {
+                $('td#previewTaskUsername').text($(this).val());
+            });
+            $('form#edit_form input#email').on('change paste keyup', function() {
+                $('td#previewTaskEmail').text($(this).val());
             });
             $('td#previewTaskStatus').text('New');
         });

@@ -69,6 +69,7 @@ $router->add('role/new', ['controller' => 'RoleController', 'action' => 'new']);
 $router->add('role/edit/{id:\d+}', ['controller' => 'RoleController', 'action' => 'edit']);
 $router->add('role/delete/{id:\d+}', ['controller' => 'RoleController', 'action' => 'delete']);
 
+$router->add('register', ['controller' => 'RegistrationController', 'action' => 'register']);
 $router->add('login', ['controller' => 'SecurityController', 'action' => 'login']);
 $router->add('logout', ['controller' => 'SecurityController', 'action' => 'logout']);
     

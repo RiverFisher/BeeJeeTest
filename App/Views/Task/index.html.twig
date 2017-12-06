@@ -64,6 +64,8 @@
                     <th scope="col">ID</th>
                     <th scope="col">Title</th>
                     <th scope="col">Description</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">E-Mail</th>
                     <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -74,9 +76,11 @@
                     <th scope="row">{{ task.id }}</th>
                     <td>{{ task.title }}</td>
                     <td>{{ task.description }}</td>
+                    <td>{{ task.author_username }}</td>
+                    <td>{{ task.author_email }}</td>
                     <td>{{ task.status }}</td>
                     <td>
-                        {% if is_granted %}
+                        {% if is_granted or (app_user.id == task.author_id and app_user.id is not null) %}
                         <a class="btn btn-outline-dark" href="{{ '/task/edit/' ~ task.id }}" role="button">
                             <i class="fa fa-pencil"></i>
                         </a>
@@ -84,7 +88,7 @@
                         <a class="btn btn-outline-success" href="{{ '/task/complete/' ~ task.id }}" role="button">
                             <i class="fa fa-hand-lizard-o"></i>
                         </a>
-                        {% if is_granted %}
+                        {% if is_granted or (app_user.id == task.author_id and app_user.id is not null) %}
                         <a class="btn btn-outline-danger" href="{{ '/task/delete/' ~ task.id }}" role="button">
                             <i class="fa fa-trash"></i>
                         </a>

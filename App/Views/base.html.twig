@@ -68,6 +68,7 @@
                 {% if app_user.id is not null %}
                 <a class="dropdown-item" href="{{ host ~ '/logout' }}">Log Out</a>
                 {% else %}
+                <a class="dropdown-item" href="{{ host ~ '/register' }}">Register</a>
                 <a class="dropdown-item" href="{{ host ~ '/login' }}">Log In</a>
                 {% endif %}
             </div>

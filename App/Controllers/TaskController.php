@@ -60,7 +60,7 @@ class TaskController extends \Core\Controller
      * Create new instance of task
      */
     public function newAction() {
-        if (isset($_GET['title']) && isset($_GET['description'])) {
+        if (isset($_POST['title']) && isset($_POST['description'])) {
             try {
                 $currentDate = new \DateTime('NOW');
 
@@ -75,14 +75,31 @@ class TaskController extends \Core\Controller
                         id,
                         title,
                         description,
+                        author_id,
+                        author_username,
+                        author_email,
                         status,
                         date_of_creation,
                         date_of_change
-                    ) VALUES (:id, :title, :description, :status, :date_of_creation, :date_of_change)");
+                    ) VALUES (
+                        :id,
+                        :title,
+                        :description,
+                        :author_id,
+                        :author_username,
+                        :author_email,
+                        :status,
+                        :date_of_creation,
+                        :date_of_change
+                    )"
+                );
                 $stm->execute([
                     ':id' => (int) $row['max'] + 1,
-                    ':title' => $_GET['title'],
-                    ':description' => $_GET['description'],
+                    ':title' => $_POST['title'],
+                    ':description' => $_POST['description'],
+                    ':author_id' => $_SESSION['app_user']->getId(),
+                    ':author_username' => $_POST['username'],
+                    ':author_email' => $_POST['email'],
                     ':status' => Task::NEW_TASK,
                     ':date_of_creation' => $currentDate->format('Y-m-d H:i:s'),
                     ':date_of_change' => $currentDate->format('Y-m-d H:i:s')]
@@ -118,6 +135,8 @@ class TaskController extends \Core\Controller
 
                 $sql = "UPDATE task SET title = '" . $_POST['title'] .
                     "', description = '" . $_POST['description'] .
+                    "', author_username = '" . $_POST['username'] .
+                    "', author_email = '" . $_POST['email'] .
                     "', date_of_change = '" . (new \DateTime('NOW'))->format('Y-m-d H:i:s') .
                     "' WHERE id = " . $this->route_params['id'];
                 $db->exec($sql);

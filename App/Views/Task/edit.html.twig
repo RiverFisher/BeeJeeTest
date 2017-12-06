@@ -35,6 +35,18 @@
                           placeholder="Enter description">{{ task.description }}</textarea>
                 <small id="titleHelp" class="form-text text-muted">Enter task title here</small>
             </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="{{ app_user.username }}"
+                       aria-describedby="usernameHelp" placeholder="Enter task's author username"/>
+                <small id="usernameHelp" class="form-text text-muted">Enter your username here</small>
+            </div>
+            <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="text" class="form-control" id="email" name="email" value="{{ app_user.email }}"
+                       aria-describedby="emailHelp" placeholder="Enter task's author E-Mail"/>
+                <small id="emailHelp" class="form-text text-muted">Enter your E-Mail here</small>
+            </div>
             <br>
             <button type="submit" class="btn btn-dark"><i class="fa fa-angle-double-up"></i>&nbsp;Save</button>
             <!-- Button trigger modal -->
@@ -43,6 +55,7 @@
             </button>
         </form>
     </div>
+    <br><br>
 
     <!-- Modal -->
     <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
@@ -63,6 +76,8 @@
                             <th scope="col">ID</th>
                             <th scope="col">Title</th>
                             <th scope="col">Description</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">E-Mail</th>
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -72,21 +87,19 @@
                             <td id="previewTaskId" scope="row"></td>
                             <td id="previewTaskTitle"></td>
                             <td id="previewTaskDescription"></td>
+                            <td id="previewTaskUsername"></td>
+                            <td id="previewTaskEmail"></td>
                             <td id="previewTaskStatus"></td>
                             <td>
-                                {% if is_granted %}
-                                    <a class="btn btn-outline-dark" href="" role="button">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>
-                                {% endif %}
+                                <a class="btn btn-outline-dark" href="" role="button">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
                                 <a class="btn btn-outline-success" href="" role="button">
                                     <i class="fa fa-hand-lizard-o"></i>
                                 </a>
-                                {% if is_granted %}
-                                    <a class="btn btn-outline-danger" href="" role="button">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                {% endif %}
+                                <a class="btn btn-outline-danger" href="" role="button">
+                                    <i class="fa fa-trash"></i>
+                                </a>
                             </td>
                         </tr>
                         </tbody>
@@ -107,12 +120,20 @@
             $('td#previewTaskId').text({{ task.id }});
             $('td#previewTaskTitle').text($('form#edit_form input#title').val());
             $('td#previewTaskDescription').text($('form#edit_form textarea#description').val());
+            $('td#previewTaskUsername').text($('form#edit_form input#username').val());
+            $('td#previewTaskEmail').text($('form#edit_form input#email').val());
             $('td#previewTaskStatus').text('New');
             $('form#edit_form input#title').on('change paste keyup', function() {
                 $('td#previewTaskTitle').text($(this).val());
             });
             $('form#edit_form textarea#description').on('change paste keyup', function() {
                 $('td#previewTaskDescription').text($(this).val());
+            });
+            $('form#edit_form input#username').on('change paste keyup', function() {
+                $('td#previewTaskUsername').text($(this).val());
+            });
+            $('form#edit_form input#email').on('change paste keyup', function() {
+                $('td#previewTaskEmail').text($(this).val());
             });
         });
     </script>

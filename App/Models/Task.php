@@ -27,6 +27,21 @@ class Task extends \Core\Model
     private $description;
 
     /**
+     * @var integer
+     */
+    private $author_id;
+
+    /**
+     * @var string
+     */
+    private $authorUsername;
+
+    /**
+     * @var string
+     */
+    private $authorEmail;
+
+    /**
      * @var string
      */
     private $status;
@@ -98,6 +113,78 @@ class Task extends \Core\Model
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set authorId
+     *
+     * @param integer $authorId
+     *
+     * @return Task
+     */
+    public function setAuthorId($authorId)
+    {
+        $this->author_id = $authorId;
+
+        return $this;
+    }
+
+    /**
+     * Get authorId
+     *
+     * @return integer
+     */
+    public function getAuthorId()
+    {
+        return $this->author_id;
+    }
+
+    /**
+     * Set authorUsername
+     *
+     * @param string $authorUsername
+     *
+     * @return Task
+     */
+    public function setAuthorUsername($authorUsername)
+    {
+        $this->authorUsername = $authorUsername;
+
+        return $this;
+    }
+
+    /**
+     * Get authorUsername
+     *
+     * @return string
+     */
+    public function getAuthorUsername()
+    {
+        return $this->authorUsername;
+    }
+
+    /**
+     * Set authorEmail
+     *
+     * @param string $authorEmail
+     *
+     * @return Task
+     */
+    public function setAuthorEmail($authorEmail)
+    {
+        $this->authorEmail = $authorEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get authorEmail
+     *
+     * @return string
+     */
+    public function getAuthorEmail()
+    {
+        return $this->authorEmail;
     }
 
     /**
